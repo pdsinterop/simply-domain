@@ -19,7 +19,6 @@ Abstract:
   The proxy is also able to decode content between protocols. This way 
   every browser/user can access the content with a simple name.
 
-
 Status Text:
   This section describes the status of this document at the time of its publication.
 
