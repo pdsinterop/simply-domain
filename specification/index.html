@@ -1823,7 +1823,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">Simply-Domain</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="profile-and-date"><span class="content">Living Document, <time class="dt-updated" datetime="2022-09-08">8 September 2022</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="profile-and-date"><span class="content">Living Document, <time class="dt-updated" datetime="2022-09-09">9 September 2022</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt class="editor">Editor:
@@ -1833,7 +1833,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <div data-fill-with="warning"></div>
    <p class="copyright" data-fill-with="copyright"><a href="http://creativecommons.org/publicdomain/zero/1.0/" rel="license"><img alt="CC0" height="15" src="https://licensebuttons.net/p/zero/1.0/80x15.png" width="80"></a> To the extent possible under law, the editors have waived all copyright
 and related or neighboring rights to this work.
-In addition, as of 8 September 2022,
+In addition, as of 9 September 2022,
 the editors have made this specification available under the <a href="http://www.openwebfoundation.org/legal/the-owf-1-0-agreements/owfa-1-0" rel="license">Open Web Foundation Agreement Version 1.0</a>,
 which is available at http://www.openwebfoundation.org/legal/the-owf-1-0-agreements/owfa-1-0.
 Parts of this work may be from another specification document.  If so, those parts are instead covered by the license of that specification document. </p>
@@ -1869,9 +1869,8 @@ Parts of this work may be from another specification document.  If so, those par
       <li><a href="#sd-fetch-txt-record"><span class="secno">4.2</span> <span class="content">Getting TXT-record from DNS</span></a>
       <li><a href="#sd-protocol-support"><span class="secno">4.3</span> <span class="content">Verify protocol support</span></a>
       <li><a href="#sd-lowest-priority"><span class="secno">4.4</span> <span class="content">Lowest priority first</span></a>
-      <li><a href="#sd-domain-verification"><span class="secno">4.5</span> <span class="content">Verify domain</span></a>
-      <li><a href="#sd-fetch-content"><span class="secno">4.6</span> <span class="content">Fetch content</span></a>
-      <li><a href="#sd-deliver-content"><span class="secno">4.7</span> <span class="content">Deliver the content</span></a>
+      <li><a href="#sd-fetch-content"><span class="secno">4.5</span> <span class="content">Fetch content</span></a>
+      <li><a href="#sd-deliver-content"><span class="secno">4.6</span> <span class="content">Deliver the content</span></a>
      </ol>
     <li><a href="#conformance"><span class="secno"></span> <span class="content"> Conformance</span></a>
     <li>
@@ -1968,22 +1967,11 @@ an error message.</p>
    <p>When there are multiple TXT-records with the same destination,
 the TXT-record with the lowests priority should be chosen.</p>
    <p>The intention is you have a fallback website on a different protocol/location.</p>
-   <h3 class="heading settled" data-level="4.5" id="sd-domain-verification"><span class="secno">4.5. </span><span class="content">Verify domain</span><a class="self-link" href="#sd-domain-verification"></a></h3>
-   <p>We want to verify that the indicated hosting is indeed meant to serve the domain.
-We do this by matching the domain from the TXT-record [Proof of DNS] with a list of 
-sites in a file on the hosting [Proof of hosting].</p>
-<pre class="language-http highlight">GET https://www.example.com/user/alice/projects/project54/container/.sites
-
-compare content of .sites with www.resource.com
-</pre>
-   <p>When there is a mismatch, the proxy should return with an error indicating the content is not to be found here.</p>
-<pre class="language-http highlight">404 Requested content not served here.
-</pre>
-   <h3 class="heading settled" data-level="4.6" id="sd-fetch-content"><span class="secno">4.6. </span><span class="content">Fetch content</span><a class="self-link" href="#sd-fetch-content"></a></h3>
-   <p>When the Proof of domain matches the Proof of hosting, we can fetch the content.</p>
+   <h3 class="heading settled" data-level="4.5" id="sd-fetch-content"><span class="secno">4.5. </span><span class="content">Fetch content</span><a class="self-link" href="#sd-fetch-content"></a></h3>
+   <p>Now we can fetch the content.</p>
 <pre class="language-http highlight">GET https://www.example.com/user/alice/projects/project54/container/presentation.html
 </pre>
-   <h3 class="heading settled" data-level="4.7" id="sd-deliver-content"><span class="secno">4.7. </span><span class="content">Deliver the content</span><a class="self-link" href="#sd-deliver-content"></a></h3>
+   <h3 class="heading settled" data-level="4.6" id="sd-deliver-content"><span class="secno">4.6. </span><span class="content">Deliver the content</span><a class="self-link" href="#sd-deliver-content"></a></h3>
    <p>Now that we have the desired content, we can send it to the client as requested.</p>
   </main>
   <div data-fill-with="conformance">
