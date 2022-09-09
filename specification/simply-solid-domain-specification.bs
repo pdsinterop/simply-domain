@@ -39,7 +39,7 @@ will fetch the content and serve it over http(s).
 
 ## Advantages: ## {#Intro-advantages}
 - Proxy is stateless
-- Very easy for endusers
+- Very easy for end-users
 - Publish from (new/any) protocol to the web
 
 # Definitions # {#definitions}
@@ -70,9 +70,9 @@ Our proxy is located at the ip 1.2.3.4 and the real content is located at:
 https://www.example.com/user/projects/project54/container/presentation.html
 ```
 
-The we must create an A record and a TXT record
+The we must create an A-record and a TXT-record
 ```
-www.resource.com A record 1.2.3.4
+www.resource.com A-record 1.2.3.4
 resource.com TXT record "www.resource.com 20 https://www.example.com/user/projects/project54/container/"
 ```
 </div>
@@ -84,10 +84,10 @@ Our proxy is located at the ip 1.2.3.4 and the real content is located at:
 ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi
 ```
 
-The we must create an A record and a TXT record
+The we must create an A-record and a TXT-record
 ```
-www.resource.com A record 1.2.3.4
-resource.com TXT record "www.resource.com 20 ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi"
+www.resource.com A-record 1.2.3.4
+resource.com TXT-record "www.resource.com 20 ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi"
 ```
 </div>
 
@@ -102,13 +102,12 @@ cat .sites
 www.resource.com
 ```
 
-
 # Serving content # {#sd-serving-content}
 
 ## Requesting the content ## {#sd-content-request}
 
 Just as with any request, the URL is entered in the browser. The 
-browser will perform a dns lookup, retrieve the A record (with the 
+browser will perform a dns lookup, retrieve the A-record (with the 
 ip of the proxy).
 
 The browser will perform a HTTP request with the proxy, where the 
@@ -118,25 +117,25 @@ significant fields are listed below:
 GET /presentation.html HTTP/1.1
 Host: www.resource.com
 ```
-## Getting TXT record from DNS ## {#sd-fetch-txt-record}
+## Getting TXT-record from DNS ## {#sd-fetch-txt-record}
 
 First thing the proxy needs to do, is fetch the corresponding 
-TXT record(s) and this will look as follows:
+TXT-record(s) and this will look as follows:
 
 ``` http
 "www.resource.com 20 https://www.example.com/user/projects/project54/container/"
 ```
 ## Lowest priority first ## {#sd-lowest-priority}
 
-When there are multiple txt records with the same destination, 
-the TXT record with the lowests priority should be chosen.
+When there are multiple TXT-records with the same destination, 
+the TXT-record with the lowests priority should be chosen.
  
 The intention is you have a fallback website on a different protocol/location.
 
 ## Verify domain ## {#sd-domain-verification}
 
 We want to verify that the indicated hosting is indeed meant to serve the domain. 
-We do this by matching the domain from the TXT record [Proof of DNS] with a list of 
+We do this by matching the domain from the TXT-record [Proof of DNS] with a list of 
 sites in a file on the hosting [Proof of hosting].
 
 ```http

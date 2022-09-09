@@ -1823,7 +1823,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">Simply-Domain</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="profile-and-date"><span class="content">Living Document, <time class="dt-updated" datetime="2022-09-02">2 September 2022</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="profile-and-date"><span class="content">Living Document, <time class="dt-updated" datetime="2022-09-06">6 September 2022</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt class="editor">Editor:
@@ -1833,7 +1833,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <div data-fill-with="warning"></div>
    <p class="copyright" data-fill-with="copyright"><a href="http://creativecommons.org/publicdomain/zero/1.0/" rel="license"><img alt="CC0" height="15" src="https://licensebuttons.net/p/zero/1.0/80x15.png" width="80"></a> To the extent possible under law, the editors have waived all copyright
 and related or neighboring rights to this work.
-In addition, as of 2 September 2022,
+In addition, as of 6 September 2022,
 the editors have made this specification available under the <a href="http://www.openwebfoundation.org/legal/the-owf-1-0-agreements/owfa-1-0" rel="license">Open Web Foundation Agreement Version 1.0</a>,
 which is available at http://www.openwebfoundation.org/legal/the-owf-1-0-agreements/owfa-1-0.
 Parts of this work may be from another specification document.  If so, those parts are instead covered by the license of that specification document. </p>
@@ -1866,7 +1866,7 @@ Parts of this work may be from another specification document.  If so, those par
      <a href="#sd-serving-content"><span class="secno">5</span> <span class="content">Serving content</span></a>
      <ol class="toc">
       <li><a href="#sd-content-request"><span class="secno">5.1</span> <span class="content">Requesting the content</span></a>
-      <li><a href="#sd-fetch-txt-record"><span class="secno">5.2</span> <span class="content">Getting TXT record from DNS</span></a>
+      <li><a href="#sd-fetch-txt-record"><span class="secno">5.2</span> <span class="content">Getting TXT-record from DNS</span></a>
       <li><a href="#sd-lowest-priority"><span class="secno">5.3</span> <span class="content">Lowest priority first</span></a>
       <li><a href="#sd-domain-verification"><span class="secno">5.4</span> <span class="content">Verify domain</span></a>
       <li><a href="#sd-fetch-content"><span class="secno">5.5</span> <span class="content">Fetch content</span></a>
@@ -1893,7 +1893,7 @@ will fetch the content and serve it over http(s).</p>
     <li data-md>
      <p>Proxy is stateless</p>
     <li data-md>
-     <p>Very easy for endusers</p>
+     <p>Very easy for end-users</p>
     <li data-md>
      <p>Publish from (new/any) protocol to the web</p>
    </ul>
@@ -1919,24 +1919,24 @@ will fetch the content and serve it over http(s).</p>
      </priority>
     </destination>
    </p>
-   <div class="example" id="example-efdf577d">
-    <a class="self-link" href="#example-efdf577d"></a> For example, we want the user to go to https://www.resource.com/presentation.html.
+   <div class="example" id="example-08d4c23f">
+    <a class="self-link" href="#example-08d4c23f"></a> For example, we want the user to go to https://www.resource.com/presentation.html.
 Our proxy is located at the ip 1.2.3.4 and the real content is located at: 
 <pre>https://www.example.com/user/projects/project54/container/presentation.html
 </pre>
-    <p>The we must create an A record and a TXT record</p>
-<pre>www.resource.com A record 1.2.3.4
+    <p>The we must create an A-record and a TXT-record</p>
+<pre>www.resource.com A-record 1.2.3.4
 resource.com TXT record "www.resource.com 20 https://www.example.com/user/projects/project54/container/"
 </pre>
    </div>
-   <div class="example" id="example-95aa3436">
-    <a class="self-link" href="#example-95aa3436"></a> For example, we want the user to go to https://www.resource.com.
+   <div class="example" id="example-b0595815">
+    <a class="self-link" href="#example-b0595815"></a> For example, we want the user to go to https://www.resource.com.
 Our proxy is located at the ip 1.2.3.4 and the real content is located at: 
 <pre>ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi
 </pre>
-    <p>The we must create an A record and a TXT record</p>
-<pre>www.resource.com A record 1.2.3.4
-resource.com TXT record "www.resource.com 20 ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi"
+    <p>The we must create an A-record and a TXT-record</p>
+<pre>www.resource.com A-record 1.2.3.4
+resource.com TXT-record "www.resource.com 20 ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi"
 </pre>
    </div>
    <h2 class="heading settled" data-level="4" id="sd-hosting-sites"><span class="secno">4. </span><span class="content">Setting up the hosting</span><a class="self-link" href="#sd-hosting-sites"></a></h2>
@@ -1949,25 +1949,25 @@ www.resource.com
    <h2 class="heading settled" data-level="5" id="sd-serving-content"><span class="secno">5. </span><span class="content">Serving content</span><a class="self-link" href="#sd-serving-content"></a></h2>
    <h3 class="heading settled" data-level="5.1" id="sd-content-request"><span class="secno">5.1. </span><span class="content">Requesting the content</span><a class="self-link" href="#sd-content-request"></a></h3>
    <p>Just as with any request, the URL is entered in the browser. The
-browser will perform a dns lookup, retrieve the A record (with the 
+browser will perform a dns lookup, retrieve the A-record (with the 
 ip of the proxy).</p>
    <p>The browser will perform a HTTP request with the proxy, where the
 significant fields are listed below:</p>
 <pre class="language-http highlight"><c- nf>GET</c-> <c- nn>/presentation.html</c-> <c- kr>HTTP</c-><c- o>/</c-><c- m>1.1</c->
 <c- e>Host</c-><c- o>:</c-> <c- l>www.resource.com</c->
 </pre>
-   <h3 class="heading settled" data-level="5.2" id="sd-fetch-txt-record"><span class="secno">5.2. </span><span class="content">Getting TXT record from DNS</span><a class="self-link" href="#sd-fetch-txt-record"></a></h3>
+   <h3 class="heading settled" data-level="5.2" id="sd-fetch-txt-record"><span class="secno">5.2. </span><span class="content">Getting TXT-record from DNS</span><a class="self-link" href="#sd-fetch-txt-record"></a></h3>
    <p>First thing the proxy needs to do, is fetch the corresponding
-TXT record(s) and this will look as follows:</p>
+TXT-record(s) and this will look as follows:</p>
 <pre class="language-http highlight">"www.resource.com 20 https://www.example.com/user/projects/project54/container/"
 </pre>
    <h3 class="heading settled" data-level="5.3" id="sd-lowest-priority"><span class="secno">5.3. </span><span class="content">Lowest priority first</span><a class="self-link" href="#sd-lowest-priority"></a></h3>
-   <p>When there are multiple txt records with the same destination,
-the TXT record with the lowests priority should be chosen.</p>
+   <p>When there are multiple TXT-records with the same destination,
+the TXT-record with the lowests priority should be chosen.</p>
    <p>The intention is you have a fallback website on a different protocol/location.</p>
    <h3 class="heading settled" data-level="5.4" id="sd-domain-verification"><span class="secno">5.4. </span><span class="content">Verify domain</span><a class="self-link" href="#sd-domain-verification"></a></h3>
    <p>We want to verify that the indicated hosting is indeed meant to serve the domain.
-We do this by matching the domain from the TXT record [Proof of DNS] with a list of 
+We do this by matching the domain from the TXT-record [Proof of DNS] with a list of 
 sites in a file on the hosting [Proof of hosting].</p>
 <pre class="language-http highlight">GET https://www.example.com/user/projects/project54/container/.sites
 
