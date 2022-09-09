@@ -138,27 +138,9 @@ the TXT-record with the lowests priority should be chosen.
  
 The intention is you have a fallback website on a different protocol/location.
 
-## Verify domain ## {#sd-domain-verification}
-
-We want to verify that the indicated hosting is indeed meant to serve the domain. 
-We do this by matching the domain from the TXT-record [Proof of DNS] with a list of 
-sites in a file on the hosting [Proof of hosting].
-
-```http
-GET https://www.example.com/user/alice/projects/project54/container/.sites
-
-compare content of .sites with www.resource.com
-```
-
-When there is a mismatch, the proxy should return with an error indicating the content is not to be found here.
-
-```http
-404 Requested content not served here.
-```
-
 ## Fetch content ## {#sd-fetch-content}
 
-When the Proof of domain matches the Proof of hosting, we can fetch the content.
+Now we can fetch the content.
 
 ```http
 GET https://www.example.com/user/alice/projects/project54/container/presentation.html
