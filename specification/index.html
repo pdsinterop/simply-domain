@@ -1845,7 +1845,7 @@ Parts of this work may be from another specification document.  If so, those par
 
   using domain names. With Simply Solid Domains, we strive to make it 
   simple to access content, with long paths, content identifiers (CID) 
-  and protocols not standard supported in the browser. 
+  and protocols not supported by browsers. 
   We do this by storing protocols and location in a TXT field, using 
   DNS as key-value store.
   The proxy is also able to decode content between protocols. This way 
@@ -1861,18 +1861,17 @@ Parts of this work may be from another specification document.  If so, those par
       <li><a href="#Intro-advantages"><span class="secno">1.1</span> <span class="content">Advantages:</span></a>
      </ol>
     <li><a href="#definitions"><span class="secno">2</span> <span class="content">Definitions</span></a>
-    <li><a href="#sd-dns-records"><span class="secno">3</span> <span class="content">Setting dns records</span></a>
-    <li><a href="#sd-hosting-sites"><span class="secno">4</span> <span class="content">Setting up the hosting</span></a>
+    <li><a href="#sd-dns-records"><span class="secno">3</span> <span class="content">Setting DNS records</span></a>
     <li>
-     <a href="#sd-serving-content"><span class="secno">5</span> <span class="content">Serving content</span></a>
+     <a href="#sd-serving-content"><span class="secno">4</span> <span class="content">Serving content</span></a>
      <ol class="toc">
-      <li><a href="#sd-content-request"><span class="secno">5.1</span> <span class="content">Requesting the content</span></a>
-      <li><a href="#sd-fetch-txt-record"><span class="secno">5.2</span> <span class="content">Getting TXT-record from DNS</span></a>
-      <li><a href="#sd-protocol-support"><span class="secno">5.3</span> <span class="content">Verify protocol support</span></a>
-      <li><a href="#sd-lowest-priority"><span class="secno">5.4</span> <span class="content">Lowest priority first</span></a>
-      <li><a href="#sd-domain-verification"><span class="secno">5.5</span> <span class="content">Verify domain</span></a>
-      <li><a href="#sd-fetch-content"><span class="secno">5.6</span> <span class="content">Fetch content</span></a>
-      <li><a href="#sd-deliver-content"><span class="secno">5.7</span> <span class="content">Deliver the content</span></a>
+      <li><a href="#sd-content-request"><span class="secno">4.1</span> <span class="content">Requesting the content</span></a>
+      <li><a href="#sd-fetch-txt-record"><span class="secno">4.2</span> <span class="content">Getting TXT-record from DNS</span></a>
+      <li><a href="#sd-protocol-support"><span class="secno">4.3</span> <span class="content">Verify protocol support</span></a>
+      <li><a href="#sd-lowest-priority"><span class="secno">4.4</span> <span class="content">Lowest priority first</span></a>
+      <li><a href="#sd-domain-verification"><span class="secno">4.5</span> <span class="content">Verify domain</span></a>
+      <li><a href="#sd-fetch-content"><span class="secno">4.6</span> <span class="content">Fetch content</span></a>
+      <li><a href="#sd-deliver-content"><span class="secno">4.7</span> <span class="content">Deliver the content</span></a>
      </ol>
     <li><a href="#conformance"><span class="secno"></span> <span class="content"> Conformance</span></a>
     <li>
@@ -1895,7 +1894,7 @@ implement new protocols.</p>
    <h3 class="heading settled" data-level="1.1" id="Intro-advantages"><span class="secno">1.1. </span><span class="content">Advantages:</span><a class="self-link" href="#Intro-advantages"></a></h3>
    <ul>
     <li data-md>
-     <p>Statelss Proxy: data is stored in dns</p>
+     <p>Stateless Proxy: data is stored in DNS</p>
     <li data-md>
      <p>Very easy for end-users</p>
     <li data-md>
@@ -1904,16 +1903,17 @@ implement new protocols.</p>
    <h2 class="heading settled" data-level="2" id="definitions"><span class="secno">2. </span><span class="content">Definitions</span><a class="self-link" href="#definitions"></a></h2>
    <dl>
     <dt>proxy
-    <dd>A proxy, fetching the desired content conform this specification
+    <dd>A proxy, fetching the desired content conforming to this specification
     <dt>destination
     <dd>The public path to the destination where the users wants to fetch the content from
     <dt>uri
-    <dd>Uniform Resource Identifier, used to describe the protocol and (real) content location.
+    <dd>Uniform Resource Identifier, used to describe the protocol and (real) content location. 
+For most protocols user here, this is a URL (Uniform Resource Locator)
     <dt>priority
     <dd>Used to determine from which uri a resource is fetched.
    </dl>
-   <h2 class="heading settled" data-level="3" id="sd-dns-records"><span class="secno">3. </span><span class="content">Setting dns records</span><a class="self-link" href="#sd-dns-records"></a></h2>
-   <p>To instruct the proxy to fetch the correct content, the publisher must set two dns records.</p>
+   <h2 class="heading settled" data-level="3" id="sd-dns-records"><span class="secno">3. </span><span class="content">Setting DNS records</span><a class="self-link" href="#sd-dns-records"></a></h2>
+   <p>To instruct the proxy to fetch the correct content, the publisher must set two DNS records.</p>
    <p>A-record on hostname, pointing to an IP of a proxy</p>
    <p>
     TXT-record on _dnslink.hostname containing the following content "dnslink=
@@ -1941,16 +1941,8 @@ Our proxy is located at the ip 1.2.3.4 and the real content is located at:
 _dnslink.www.resource.com TXT-record "ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi 20"
 </pre>
    </div>
-   <h2 class="heading settled" data-level="4" id="sd-hosting-sites"><span class="secno">4. </span><span class="content">Setting up the hosting</span><a class="self-link" href="#sd-hosting-sites"></a></h2>
-   <p>On the URI on the hosting, we require that a file exists and that the
-domain a user requests is in it. This file can contain multiple domain 
-names, for example nl.resource.com, www.resource.com resource.com etc.</p>
-<pre class="language-http highlight">cat .sites
-www.resource.com
-resource.com
-</pre>
-   <h2 class="heading settled" data-level="5" id="sd-serving-content"><span class="secno">5. </span><span class="content">Serving content</span><a class="self-link" href="#sd-serving-content"></a></h2>
-   <h3 class="heading settled" data-level="5.1" id="sd-content-request"><span class="secno">5.1. </span><span class="content">Requesting the content</span><a class="self-link" href="#sd-content-request"></a></h3>
+   <h2 class="heading settled" data-level="4" id="sd-serving-content"><span class="secno">4. </span><span class="content">Serving content</span><a class="self-link" href="#sd-serving-content"></a></h2>
+   <h3 class="heading settled" data-level="4.1" id="sd-content-request"><span class="secno">4.1. </span><span class="content">Requesting the content</span><a class="self-link" href="#sd-content-request"></a></h3>
    <p>A user enters the URI in the browser. The browser will perform a dns
 lookup, retrieve the A-record (with the ip of the proxy).</p>
    <p>The browser will perform a HTTP request with the proxy, where the
@@ -1958,25 +1950,25 @@ significant fields are listed below:</p>
 <pre class="language-http highlight"><c- nf>GET</c-> <c- nn>/presentation.html</c-> <c- kr>HTTP</c-><c- o>/</c-><c- m>1.1</c->
 <c- e>Host</c-><c- o>:</c-> <c- l>www.resource.com</c->
 </pre>
-   <h3 class="heading settled" data-level="5.2" id="sd-fetch-txt-record"><span class="secno">5.2. </span><span class="content">Getting TXT-record from DNS</span><a class="self-link" href="#sd-fetch-txt-record"></a></h3>
+   <h3 class="heading settled" data-level="4.2" id="sd-fetch-txt-record"><span class="secno">4.2. </span><span class="content">Getting TXT-record from DNS</span><a class="self-link" href="#sd-fetch-txt-record"></a></h3>
    <p>First thing the proxy needs to do, is fetch the corresponding
 TXT-record(s) on _dnslink.hostname and this will look as follows:</p>
 <pre class="language-http highlight">dig +short TXT _dnslink.resource.com
 "https://www.example.com/user/alice/projects/project54/container/ 20"
 </pre>
-   <h3 class="heading settled" data-level="5.3" id="sd-protocol-support"><span class="secno">5.3. </span><span class="content">Verify protocol support</span><a class="self-link" href="#sd-protocol-support"></a></h3>
-   <p>First thing the proxy needs to do is check whether it can support the
+   <h3 class="heading settled" data-level="4.3" id="sd-protocol-support"><span class="secno">4.3. </span><span class="content">Verify protocol support</span><a class="self-link" href="#sd-protocol-support"></a></h3>
+   <p>Next action the proxy needs to do is check whether it can support the
 protocol. If the protocol is not supported, either for technical 
 (no code for fetching/transforming) or administrative, need to put out 
 an error message.</p>
 <pre class="language-http highlight">405 Method not allowed
 415 Unsupported Media Type
 </pre>
-   <h3 class="heading settled" data-level="5.4" id="sd-lowest-priority"><span class="secno">5.4. </span><span class="content">Lowest priority first</span><a class="self-link" href="#sd-lowest-priority"></a></h3>
+   <h3 class="heading settled" data-level="4.4" id="sd-lowest-priority"><span class="secno">4.4. </span><span class="content">Lowest priority first</span><a class="self-link" href="#sd-lowest-priority"></a></h3>
    <p>When there are multiple TXT-records with the same destination,
 the TXT-record with the lowests priority should be chosen.</p>
    <p>The intention is you have a fallback website on a different protocol/location.</p>
-   <h3 class="heading settled" data-level="5.5" id="sd-domain-verification"><span class="secno">5.5. </span><span class="content">Verify domain</span><a class="self-link" href="#sd-domain-verification"></a></h3>
+   <h3 class="heading settled" data-level="4.5" id="sd-domain-verification"><span class="secno">4.5. </span><span class="content">Verify domain</span><a class="self-link" href="#sd-domain-verification"></a></h3>
    <p>We want to verify that the indicated hosting is indeed meant to serve the domain.
 We do this by matching the domain from the TXT-record [Proof of DNS] with a list of 
 sites in a file on the hosting [Proof of hosting].</p>
@@ -1987,11 +1979,11 @@ compare content of .sites with www.resource.com
    <p>When there is a mismatch, the proxy should return with an error indicating the content is not to be found here.</p>
 <pre class="language-http highlight">404 Requested content not served here.
 </pre>
-   <h3 class="heading settled" data-level="5.6" id="sd-fetch-content"><span class="secno">5.6. </span><span class="content">Fetch content</span><a class="self-link" href="#sd-fetch-content"></a></h3>
+   <h3 class="heading settled" data-level="4.6" id="sd-fetch-content"><span class="secno">4.6. </span><span class="content">Fetch content</span><a class="self-link" href="#sd-fetch-content"></a></h3>
    <p>When the Proof of domain matches the Proof of hosting, we can fetch the content.</p>
 <pre class="language-http highlight">GET https://www.example.com/user/alice/projects/project54/container/presentation.html
 </pre>
-   <h3 class="heading settled" data-level="5.7" id="sd-deliver-content"><span class="secno">5.7. </span><span class="content">Deliver the content</span><a class="self-link" href="#sd-deliver-content"></a></h3>
+   <h3 class="heading settled" data-level="4.7" id="sd-deliver-content"><span class="secno">4.7. </span><span class="content">Deliver the content</span><a class="self-link" href="#sd-deliver-content"></a></h3>
    <p>Now that we have the desired content, we can send it to the client as requested.</p>
   </main>
   <div data-fill-with="conformance">

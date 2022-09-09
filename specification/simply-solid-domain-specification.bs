@@ -13,11 +13,12 @@ Abstract:
   Humans want simple names for Internet resources. That is why we are 
   using domain names. With Simply Solid Domains, we strive to make it 
   simple to access content, with long paths, content identifiers (CID) 
-  and protocols not standard supported in the browser. 
+  and protocols not supported by browsers. 
   We do this by storing protocols and location in a TXT field, using 
   DNS as key-value store.
   The proxy is also able to decode content between protocols. This way 
   every browser/user can access the content with a simple name.
+
 
 Status Text:
   This section describes the status of this document at the time of its publication.
@@ -41,7 +42,7 @@ When implementing this standard, it would be great to make it easy to
 implement new protocols.
 
 ## Advantages: ## {#Intro-advantages}
-- Statelss Proxy: data is stored in dns
+- Stateless Proxy: data is stored in DNS
 - Very easy for end-users
 - Publish from (new/any) protocol to the web
 
@@ -49,18 +50,19 @@ implement new protocols.
 
 <dl>
 <dt>proxy</dt>
-<dd>A proxy, fetching the desired content conform this specification</dd>
+<dd>A proxy, fetching the desired content conforming to this specification</dd>
 <dt>destination</dt>
 <dd>The public path to the destination where the users wants to fetch the content from</dd>
 <dt>uri</dt>
-<dd>Uniform Resource Identifier, used to describe the protocol and (real) content location.</dd>
+<dd>Uniform Resource Identifier, used to describe the protocol and (real) content location. 
+For most protocols user here, this is a URL (Uniform Resource Locator)</dd>
 <dt>priority</dt>
 <dd>Used to determine from which uri a resource is fetched.</dd>
 </dl>
 
-# Setting dns records # {#sd-dns-records}
+# Setting DNS records # {#sd-dns-records}
 
-To instruct the proxy to fetch the correct content, the publisher must set two dns records.
+To instruct the proxy to fetch the correct content, the publisher must set two DNS records.
 
 A-record on hostname, pointing to an IP of a proxy
 
@@ -94,18 +96,6 @@ _dnslink.www.resource.com TXT-record "ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3
 ```
 </div>
 
-# Setting up the hosting # {#sd-hosting-sites}
-
-On the URI on the hosting, we require that a file exists and that the 
-domain a user requests is in it. This file can contain multiple domain 
-names, for example nl.resource.com, www.resource.com resource.com etc.
-
-```http
-cat .sites
-www.resource.com
-resource.com
-```
-
 # Serving content # {#sd-serving-content}
 
 ## Requesting the content ## {#sd-content-request}
@@ -132,7 +122,7 @@ dig +short TXT _dnslink.resource.com
 
 ## Verify protocol support ## {#sd-protocol-support}
 
-First thing the proxy needs to do is check whether it can support the
+Next action the proxy needs to do is check whether it can support the
 protocol. If the protocol is not supported, either for technical 
 (no code for fetching/transforming) or administrative, need to put out 
 an error message.
