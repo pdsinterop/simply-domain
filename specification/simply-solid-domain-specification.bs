@@ -12,11 +12,12 @@ Status: LD
 Abstract:
   Humans want simple names for Internet resources. That is why we are 
   using domain names. With Simply Solid Domains, we strive to make it 
-  easier to access content with long paths, content identifiers (CID) 
-  and protocols not standard supported in the browser. 
-  We do this by storing protocols and location in a TXT field and 
-  using a proxy to decode the information. This way every browser or 
-  user can access the content with a simple name.
+  simple to access content, with long paths, content identifiers (CID) 
+  and protocols not supported by browsers. 
+  We do this by storing protocols and location in a TXT field, using 
+  DNS as key-value store.
+  The proxy is also able to decode content between protocols. This way 
+  every browser/user can access the content with a simple name.
 
 Status Text:
   This section describes the status of this document at the time of its publication.
@@ -31,49 +32,52 @@ Status Text:
 # Introduction # {#intro}
 
 This document outlines in detail how a user can configure DNS to make 
-content available to browsers. 
-The client uses a custom/short URL. The content owner can use a protocol 
+content available. 
+The client uses a custom/short URI. The publisher can use a protocol 
 which the browser might not support. 
-Content owners can serve content stored on a long URL. The proxy 
-will fetch the content and serve it over http(s).
+Publishers can serve content stored on a long URI. The proxy will fetch
+the content and serve it.
+When implementing this standard, it would be great to make it easy to 
+implement new protocols.
 
 ## Advantages: ## {#Intro-advantages}
-- Proxy is stateless
-- Very easy for endusers
+- Stateless Proxy: data is stored in DNS
+- Very easy for end-users
 - Publish from (new/any) protocol to the web
 
 # Definitions # {#definitions}
 
 <dl>
 <dt>proxy</dt>
-<dd>A proxy, fetching the desired content conform this specification</dd>
+<dd>A proxy, fetching the desired content conforming to this specification</dd>
 <dt>destination</dt>
 <dd>The public path to the destination where the users wants to fetch the content from</dd>
+<dt>uri</dt>
+<dd>Uniform Resource Identifier, used to describe the protocol and (real) content location. 
+For most protocols user here, this is a URL (Uniform Resource Locator)</dd>
 <dt>priority</dt>
-<dd>Used to determine from which url a resource is fetched.</dd>
-<dt>url</dt>
-<dd>Uniform Resource Locator, used to describe the protocol and (real) content location.</dd>
+<dd>Used to determine from which uri a resource is fetched.</dd>
 </dl>
 
-# Setting the correct dns records # {#sd-dns-records}
+# Setting DNS records # {#sd-dns-records}
 
-To instruct the proxy to fetch the correct content, the content owner must set two dns records.
+To instruct the proxy to fetch the correct content, the publisher must set two DNS records.
 
-A-record pointing to an IP of a proxy
+A-record on hostname, pointing to an IP of a proxy
 
-TXT-record containing the following content "<destination> <priority> <URL>"
+TXT-record on _dnslink.hostname containing the following content "dnslink=<URI> <priority>"
 
 <div class=example>
 For example, we want the user to go to https://www.resource.com/presentation.html.
 Our proxy is located at the ip 1.2.3.4 and the real content is located at: 
 ```
-https://www.example.com/user/projects/project54/container/presentation.html
+https://www.example.com/user/alice/projects/project54/container/presentation.html
 ```
 
-The we must create an A record and a TXT record
+The we must create an A-record and a TXT-record
 ```
-www.resource.com A record 1.2.3.4
-resource.com TXT record "www.resource.com 20 https://www.example.com/user/projects/project54/container/"
+www.resource.com A-record 1.2.3.4
+_dnslink.www.resource.com TXT record "dnslink=https://www.example.com/user/alice/projects/project54/container/ 20"
 ```
 </div>
 
@@ -84,32 +88,19 @@ Our proxy is located at the ip 1.2.3.4 and the real content is located at:
 ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi
 ```
 
-The we must create an A record and a TXT record
+The we must create an A-record and a TXT-record
 ```
-www.resource.com A record 1.2.3.4
-resource.com TXT record "www.resource.com 20 ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi"
+www.resource.com A-record 1.2.3.4
+_dnslink.www.resource.com TXT-record "ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi 20"
 ```
 </div>
-
-# Setting up the hosting # {#sd-hosting-sites}
-
-On the URL on the hosting, we require that a file exists and that the 
-domain a user requests is in it. This file can contain multiple domain 
-names, for example nl.resource.com, www.resource.com resource.com etc.
-
-```http
-cat .sites
-www.resource.com
-```
-
 
 # Serving content # {#sd-serving-content}
 
 ## Requesting the content ## {#sd-content-request}
 
-Just as with any request, the URL is entered in the browser. The 
-browser will perform a dns lookup, retrieve the A record (with the 
-ip of the proxy).
+A user enters the URI in the browser. The browser will perform a dns 
+lookup, retrieve the A-record (with the ip of the proxy).
 
 The browser will perform a HTTP request with the proxy, where the 
 significant fields are listed below:
@@ -118,49 +109,45 @@ significant fields are listed below:
 GET /presentation.html HTTP/1.1
 Host: www.resource.com
 ```
-## Getting TXT record from DNS ## {#sd-fetch-txt-record}
+## Getting TXT-record from DNS ## {#sd-fetch-txt-record}
 
 First thing the proxy needs to do, is fetch the corresponding 
-TXT record(s) and this will look as follows:
+TXT-record(s) on _dnslink.hostname and this will look as follows:
 
 ``` http
-"www.resource.com 20 https://www.example.com/user/projects/project54/container/"
+dig +short TXT _dnslink.resource.com
+"https://www.example.com/user/alice/projects/project54/container/ 20"
 ```
+
+## Verify protocol support ## {#sd-protocol-support}
+
+Next action the proxy needs to do is check whether it can support the
+protocol. If the protocol is not supported, either for technical 
+(no code for fetching/transforming) or administrative, need to put out 
+an error message.
+
+```http
+405 Method not allowed
+415 Unsupported Media Type
+```
+
 ## Lowest priority first ## {#sd-lowest-priority}
 
-When there are multiple txt records with the same destination, 
-the TXT record with the lowests priority should be chosen.
+When there are multiple TXT-records with the same destination, 
+the TXT-record with the lowests priority should be chosen.
  
 The intention is you have a fallback website on a different protocol/location.
 
-## Verify domain ## {#sd-domain-verification}
-
-We want to verify that the indicated hosting is indeed meant to serve the domain. 
-We do this by matching the domain from the TXT record [Proof of DNS] with a list of 
-sites in a file on the hosting [Proof of hosting].
-
-```http
-GET https://www.example.com/user/projects/project54/container/.sites
-
-compare content of .sites with www.resource.com
-```
-
-When there is a mismatch, the proxy should return with an error indicating the content is not to be found here.
-
-```http
-HTTP://1.1 404 Requested content not served here.
-```
-
 ## Fetch content ## {#sd-fetch-content}
 
-When the Proof of domain matches the Proof of hosting, we can fetch the content.
+Now we can fetch the content.
 
 ```http
-GET https://www.example.com/user/projects/project54/container/presentation.html
+GET https://www.example.com/user/alice/projects/project54/container/presentation.html
 
 ```
 </div>
 
 ## Deliver the content ## {#sd-deliver-content}
 
-Now that we have the desired content, we can send it to the client via http(s) as requested.
+Now that we have the desired content, we can send it to the client as requested.
