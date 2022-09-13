@@ -1,5 +1,5 @@
 {
-  "name": "http-proxy-server",
+  "name": "dns-proxy-server",
   "version": "1.0.0",
   "description": "A DNS Proxy server ",
   "main": "index.js",
