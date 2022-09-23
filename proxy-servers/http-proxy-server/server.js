@@ -29,6 +29,7 @@ server.on("connection", function (clientToProxySocket) {
         .split("Host: ")[1]
         .split("\n")[0];
     }
+    console.log(data.toString());
 
     let serverConfig = {
       host: serverAddress,
@@ -37,18 +38,19 @@ server.on("connection", function (clientToProxySocket) {
 
     /// Create a connection from proxy to destination server
     let proxyToServerSocket = net.createConnection(serverConfig, function(){
-      console.log(data.toString());
+      console.log("Proxy connected to server");
     });
 
+    /// Stream the data to the server
     if(isTLSConnection) {
       clientToProxySocket.write("HTTP/1.1 200 OK\r\n\n")
     } else {
       proxyToServerSocket.write(data);
     }
 
-    /// Set the pipeline from client>proxy to proxy>server socket
+    /// Set the pipeline from [client -> proxy] to [proxy -> server]
     clientToProxySocket.pipe(proxyToServerSocket);
-    /// Set the pipeline from server>proxy to proxy>client
+    /// Set the pipeline from [server -> proxy] to [proxy -> client]
     proxyToServerSocket.pipe(clientToProxySocket);
 
     proxyToServerSocket.on("error", function(err){
