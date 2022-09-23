@@ -1,4 +1,3 @@
-let dns = require('native-dns');
 let server = dns.createServer();
 
 server.on('listening', function(){
