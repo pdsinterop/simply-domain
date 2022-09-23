@@ -1,0 +1,22 @@
+{
+  "name": "http-proxy-server",
+  "version": "0.0.1",
+  "description": "A proxy server that supports http protocol",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pdsinterop/simply-domain.git"
+  },
+  "author": "Alexander Kacharava",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pdsinterop/simply-domain/issues"
+  },
+  "homepage": "https://github.com/pdsinterop/simply-domain#readme",
+  "dependencies": {
+    "express": "^4.18.1"
+  }
+}
