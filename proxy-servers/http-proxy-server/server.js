@@ -4,6 +4,7 @@ const config = {
   host: "0.0.0.0",
   port: 8080,
 };
+const dns = require("dns");
 
 /// Establishes a connection to target URL via client to proxy
 server.on("connection", function (clientToProxySocket) {
@@ -12,10 +13,10 @@ server.on("connection", function (clientToProxySocket) {
     /// Check if the connection is HTTP or HTTPS
     let isTLSConnection = data.toString().indexOf("CONNECT") !== -1;
 
-    let serverPort = 80
+    let serverPort = 80;
     let serverAddress;
 
-    if(isTLSConnection) {
+    if (isTLSConnection) {
       serverPort = 443;
 
       serverAddress = data
@@ -24,26 +25,34 @@ server.on("connection", function (clientToProxySocket) {
         .split(" ")[1]
         .split(":")[0];
     } else {
-      serverAddress = data
-        .toString()
-        .split("Host: ")[1]
-        .split("\n")[0];
+      serverAddress = data.toString().split("Host: ")[1].split("\n")[0];
     }
-    console.log(data.toString());
 
     let serverConfig = {
       host: serverAddress,
-      port: serverPort
+      port: serverPort,
     };
 
     /// Create a connection from proxy to destination server
-    let proxyToServerSocket = net.createConnection(serverConfig, function(){
+    let proxyToServerSocket = net.createConnection(serverConfig, function () {
       console.log("Proxy connected to server");
     });
 
+    console.log(serverConfig.host);
+
+    // Get All records from hostname
+    dns.resolveAny(serverConfig.host, function (err, records) {
+      if (err) {
+        console.log(err);
+        return;
+      }
+
+      console.log("TXT-Records: %j", records);
+    });
+
     /// Stream the data to the server
-    if(isTLSConnection) {
-      clientToProxySocket.write("HTTP/1.1 200 OK\r\n\n")
+    if (isTLSConnection) {
+      clientToProxySocket.write("HTTP/1.1 200 OK\r\n\n");
     } else {
       proxyToServerSocket.write(data);
     }
@@ -53,15 +62,15 @@ server.on("connection", function (clientToProxySocket) {
     /// Set the pipeline from [server -> proxy] to [proxy -> client]
     proxyToServerSocket.pipe(clientToProxySocket);
 
-    proxyToServerSocket.on("error", function(err){
+    proxyToServerSocket.on("error", function (err) {
       console.log("Proxy to server error");
       console.log(err);
     });
 
-    clientToProxySocket.on("error", function(err){
+    clientToProxySocket.on("error", function (err) {
       console.log("Client to proxy error");
       console.log(err);
-    })
+    });
   });
 });
 
