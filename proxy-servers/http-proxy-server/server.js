@@ -33,21 +33,22 @@ server.on("connection", function (clientToProxySocket) {
       port: serverPort,
     };
 
+    console.log(serverConfig.host);
+
     /// Create a connection from proxy to destination server
     let proxyToServerSocket = net.createConnection(serverConfig, function () {
       console.log("Proxy connected to server");
     });
 
-    console.log(serverConfig.host);
-
     // Get All records from hostname
-    dns.resolveAny(serverConfig.host, function (err, records) {
+    dns.resolveTxt(serverConfig.host, function (err, records) {
       if (err) {
         console.log(err);
         return;
       }
 
-      console.log("TXT-Records: %j", records);
+
+      console.log("TXT-Records: %s", JSON.stringify(records, 0, 2));
     });
 
     /// Stream the data to the server
