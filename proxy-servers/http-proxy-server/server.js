@@ -1,4 +1,5 @@
 const net = require("net");
+const https = require("node:https");
 const server = net.createServer();
 const config = {
   host: "0.0.0.0",
@@ -40,17 +41,6 @@ server.on("connection", function (clientToProxySocket) {
       console.log("Proxy connected to server");
     });
 
-    // Get All records from hostname
-    dns.resolveTxt(serverConfig.host, function (err, records) {
-      if (err) {
-        console.log(err);
-        return;
-      }
-
-
-      console.log("TXT-Records: %s", JSON.stringify(records, 0, 2));
-    });
-
     /// Stream the data to the server
     if (isTLSConnection) {
       clientToProxySocket.write("HTTP/1.1 200 OK\r\n\n");
@@ -63,14 +53,34 @@ server.on("connection", function (clientToProxySocket) {
     /// Set the pipeline from [server -> proxy] to [proxy -> client]
     proxyToServerSocket.pipe(clientToProxySocket);
 
+    // Get all TXT records from _dnslink.hostname
+    dns.resolveTxt("_dnslink." + serverConfig.host, function (err, records) {
+      if (err) {
+        //console.log(err);
+        return;
+      }
+
+      //console.log("TXT-Records: %s", JSON.stringify(records, 0, 2));
+
+      if (!Array.isArray(records[0])) {
+        return;
+      } else if (records[0][0].includes("dnslink")) {
+        let data = records[0][0].replace("dnslink=", "");
+        console.log(data);
+        https.get(data, function (res) {
+          console.log("Statuscode: " + res.statusCode);
+        });
+      }
+    });
+
     proxyToServerSocket.on("error", function (err) {
-      console.log("Proxy to server error");
-      console.log(err);
+      //console.log("Proxy to server error");
+      //console.log(err);
     });
 
     clientToProxySocket.on("error", function (err) {
-      console.log("Client to proxy error");
-      console.log(err);
+      //console.log("Client to proxy error");
+      //console.log(err);
     });
   });
 });
