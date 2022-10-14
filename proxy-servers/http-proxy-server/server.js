@@ -3,7 +3,7 @@ const https = require("node:https");
 const server = net.createServer();
 const config = {
   host: "0.0.0.0",
-  port: 8080,
+  port: 3000,
 };
 const dns = require("dns");
 
