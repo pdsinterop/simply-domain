@@ -56,7 +56,7 @@ implement new protocols.
 <dd>Uniform Resource Identifier, used to describe the protocol and (real) content location. 
 For most protocols user here, this is a URL (Uniform Resource Locator)</dd>
 <dt>priority</dt>
-<dd>Number, used to determine from which uri a resource is fetched. This is an optional record</dd>
+<dd>Number, used to determine from which uri a resource is fetched. This is an optional field</dd>
 </dl>
 
 # Setting DNS records # {#sd-dns-records}
@@ -118,7 +118,7 @@ TXT-record(s) on _dnslink.hostname and this will look as follows:
 
 ``` http
 dig +short TXT _dnslink.resource.com
-"https://www.example.com/user/alice/projects/project54/container/ 20"
+"dnslink=https://www.example.com/user/alice/projects/project54/container/ 20"
 ```
 
 ## Verify protocol support ## {#sd-protocol-support}
