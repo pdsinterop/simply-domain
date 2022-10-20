@@ -56,7 +56,7 @@ implement new protocols.
 <dd>Uniform Resource Identifier, used to describe the protocol and (real) content location. 
 For most protocols user here, this is a URL (Uniform Resource Locator)</dd>
 <dt>priority</dt>
-<dd>Used to determine from which uri a resource is fetched.</dd>
+<dd>Number, used to determine from which uri a resource is fetched. This is an optional record</dd>
 </dl>
 
 # Setting DNS records # {#sd-dns-records}
@@ -65,7 +65,9 @@ To instruct the proxy to fetch the correct content, the publisher must set two D
 
 A-record on hostname, pointing to an IP of a proxy
 
-TXT-record on _dnslink.hostname containing the following content "dnslink=<URI> <priority>"
+TXT-record on _dnslink.hostname containing one of the following forms: "dnslink=<URI>" or with optional priority "dnslink=<URI> <priority>"
+
+If there is no <priority> then the priority will get a default value of 20.
 
 <div class=example>
 For example, we want the user to go to https://www.resource.com/presentation.html.
@@ -91,7 +93,7 @@ ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi
 The we must create an A-record and a TXT-record
 ```
 www.resource.com A-record 1.2.3.4
-_dnslink.www.resource.com TXT-record "ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi 20"
+_dnslink.www.resource.com TXT-record "dnslink=ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi 20"
 ```
 </div>
 
@@ -134,15 +136,17 @@ an error message.
 ## Lowest priority first ## {#sd-lowest-priority}
 
 When there are multiple TXT-records with the same destination, 
-the TXT-record with the lowests priority should be chosen.
+only supported records with a supported protocol are taken into account   
+and the TXT-record with the lowests priority should be chosen.
  
 The intention is you have a fallback website on a different protocol/location.
 
 ## Fetch content ## {#sd-fetch-content}
 
-Now we can fetch the content.
+Now we can fetch the content. This is protocol-dependant and can be complex for some protocols.
 
 ```http
+For https, in our example this could be:
 GET https://www.example.com/user/alice/projects/project54/container/presentation.html
 
 ```
@@ -150,4 +154,4 @@ GET https://www.example.com/user/alice/projects/project54/container/presentation
 
 ## Deliver the content ## {#sd-deliver-content}
 
-Now that we have the desired content, we can send it to the client as requested.
+Now that we have the desired content, we can send it to the client as requested. This will be as http(s).
