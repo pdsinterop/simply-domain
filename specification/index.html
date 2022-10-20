@@ -1487,7 +1487,7 @@ Possible extra rowspan handling
 		}
 	}
 </style>
-  <meta content="Bikeshed version 44af0bf3e, updated Fri Jul 29 17:05:16 2022 -0700" name="generator">
+  <meta content="Bikeshed version b0de3432c, updated Thu Oct 13 09:16:59 2022 -0700" name="generator">
 <style>/* style-autolinks */
 
 .css.css, .property.property, .descriptor.descriptor {
@@ -1823,7 +1823,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
   <div class="head">
    <p data-fill-with="logo"></p>
    <h1 class="p-name no-ref" id="title">Simply-Domain</h1>
-   <h2 class="no-num no-toc no-ref heading settled" id="profile-and-date"><span class="content">Living Document, <time class="dt-updated" datetime="2022-09-09">9 September 2022</time></span></h2>
+   <h2 class="no-num no-toc no-ref heading settled" id="profile-and-date"><span class="content">Living Document, <time class="dt-updated" datetime="2022-10-20">20 October 2022</time></span></h2>
    <div data-fill-with="spec-metadata">
     <dl>
      <dt class="editor">Editor:
@@ -1833,7 +1833,7 @@ c-[il] { color: #000000 } /* Literal.Number.Integer.Long */
    <div data-fill-with="warning"></div>
    <p class="copyright" data-fill-with="copyright"><a href="http://creativecommons.org/publicdomain/zero/1.0/" rel="license"><img alt="CC0" height="15" src="https://licensebuttons.net/p/zero/1.0/80x15.png" width="80"></a> To the extent possible under law, the editors have waived all copyright
 and related or neighboring rights to this work.
-In addition, as of 9 September 2022,
+In addition, as of 20 October 2022,
 the editors have made this specification available under the <a href="http://www.openwebfoundation.org/legal/the-owf-1-0-agreements/owfa-1-0" rel="license">Open Web Foundation Agreement Version 1.0</a>,
 which is available at http://www.openwebfoundation.org/legal/the-owf-1-0-agreements/owfa-1-0.
 Parts of this work may be from another specification document.  If so, those parts are instead covered by the license of that specification document. </p>
@@ -1909,16 +1909,23 @@ implement new protocols.</p>
     <dd>Uniform Resource Identifier, used to describe the protocol and (real) content location. 
 For most protocols user here, this is a URL (Uniform Resource Locator)
     <dt>priority
-    <dd>Used to determine from which uri a resource is fetched.
+    <dd>Number, used to determine from which uri a resource is fetched. This is an optional field
    </dl>
    <h2 class="heading settled" data-level="3" id="sd-dns-records"><span class="secno">3. </span><span class="content">Setting DNS records</span><a class="self-link" href="#sd-dns-records"></a></h2>
    <p>To instruct the proxy to fetch the correct content, the publisher must set two DNS records.</p>
    <p>A-record on hostname, pointing to an IP of a proxy</p>
    <p>
-    TXT-record on _dnslink.hostname containing the following content "dnslink=
+    TXT-record on _dnslink.hostname containing one of the following forms: "dnslink=
     <uri>
-     <priority>"</priority>
+     " or with optional priority "dnslink=
+     <uri>
+      <priority>"</priority>
+     </uri>
     </uri>
+   </p>
+   <p>
+    If there is no 
+    <priority> then the priority will get a default value of 20.</priority>
    </p>
    <div class="example" id="example-8a234d52">
     <a class="self-link" href="#example-8a234d52"></a> For example, we want the user to go to https://www.resource.com/presentation.html.
@@ -1930,14 +1937,14 @@ Our proxy is located at the ip 1.2.3.4 and the real content is located at:
 _dnslink.www.resource.com TXT record "dnslink=https://www.example.com/user/alice/projects/project54/container/ 20"
 </pre>
    </div>
-   <div class="example" id="example-c33ecff9">
-    <a class="self-link" href="#example-c33ecff9"></a> For example, we want the user to go to https://www.resource.com.
+   <div class="example" id="example-73578d9a">
+    <a class="self-link" href="#example-73578d9a"></a> For example, we want the user to go to https://www.resource.com.
 Our proxy is located at the ip 1.2.3.4 and the real content is located at: 
 <pre>ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi
 </pre>
     <p>The we must create an A-record and a TXT-record</p>
 <pre>www.resource.com A-record 1.2.3.4
-_dnslink.www.resource.com TXT-record "ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi 20"
+_dnslink.www.resource.com TXT-record "dnslink=ipfs://bafybeigdyrzt5sfp7udm7hu76uh7y26nf3efuylqabf3oclgtqy55fbzdi 20"
 </pre>
    </div>
    <h2 class="heading settled" data-level="4" id="sd-serving-content"><span class="secno">4. </span><span class="content">Serving content</span><a class="self-link" href="#sd-serving-content"></a></h2>
@@ -1953,7 +1960,7 @@ significant fields are listed below:</p>
    <p>First thing the proxy needs to do, is fetch the corresponding
 TXT-record(s) on _dnslink.hostname and this will look as follows:</p>
 <pre class="language-http highlight">dig +short TXT _dnslink.resource.com
-"https://www.example.com/user/alice/projects/project54/container/ 20"
+"dnslink=https://www.example.com/user/alice/projects/project54/container/ 20"
 </pre>
    <h3 class="heading settled" data-level="4.3" id="sd-protocol-support"><span class="secno">4.3. </span><span class="content">Verify protocol support</span><a class="self-link" href="#sd-protocol-support"></a></h3>
    <p>Next action the proxy needs to do is check whether it can support the
@@ -1965,14 +1972,16 @@ an error message.</p>
 </pre>
    <h3 class="heading settled" data-level="4.4" id="sd-lowest-priority"><span class="secno">4.4. </span><span class="content">Lowest priority first</span><a class="self-link" href="#sd-lowest-priority"></a></h3>
    <p>When there are multiple TXT-records with the same destination,
-the TXT-record with the lowests priority should be chosen.</p>
+only supported records with a supported protocol are taken into account   
+and the TXT-record with the lowests priority should be chosen.</p>
    <p>The intention is you have a fallback website on a different protocol/location.</p>
    <h3 class="heading settled" data-level="4.5" id="sd-fetch-content"><span class="secno">4.5. </span><span class="content">Fetch content</span><a class="self-link" href="#sd-fetch-content"></a></h3>
-   <p>Now we can fetch the content.</p>
-<pre class="language-http highlight">GET https://www.example.com/user/alice/projects/project54/container/presentation.html
+   <p>Now we can fetch the content. This is protocol-dependant and can be complex for some protocols.</p>
+<pre class="language-http highlight">For https, in our example this could be:
+GET https://www.example.com/user/alice/projects/project54/container/presentation.html
 </pre>
    <h3 class="heading settled" data-level="4.6" id="sd-deliver-content"><span class="secno">4.6. </span><span class="content">Deliver the content</span><a class="self-link" href="#sd-deliver-content"></a></h3>
-   <p>Now that we have the desired content, we can send it to the client as requested.</p>
+   <p>Now that we have the desired content, we can send it to the client as requested. This will be as http(s).</p>
   </main>
   <div data-fill-with="conformance">
    <h2 class="no-ref no-num heading settled" id="conformance"><span class="content"> Conformance</span><a class="self-link" href="#conformance"></a></h2>
